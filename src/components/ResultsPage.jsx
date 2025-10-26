@@ -1,7 +1,6 @@
 // 1. Enhanced ResultsPage Component with Print Functionality
 import React, {useRef} from 'react';
-import { questionsData } from '../data/questions';
-import html2pdf from 'html2pdf.js';
+import { questionsData } from "../data/questionsweek1-3";
 
 const ResultsPage = ({ answers, score, onReset, studentName = "Student" }) => {
   const getScoreLevel = (percentage) => {
@@ -28,18 +27,29 @@ const ResultsPage = ({ answers, score, onReset, studentName = "Student" }) => {
   return (
     <div className="results-page" ref={printableRef}>
       {/* Print Header - only visible when printing */}
-      <div className="print-header" style={{ display: 'none' }}>
+      <div className="print-header" style={{ display: "none" }}>
         <h1>English Assessment Results</h1>
-        <p><strong>Student:</strong> {studentName}</p>
-        <p><strong>Date:</strong> {currentDate}</p>
-        <p><strong>Assessment:</strong> Grade 5 English - Weeks 1-3</p>
+        <p>
+          <strong>Student:</strong> {studentName}
+        </p>
+        <p>
+          <strong>Date:</strong> {currentDate}
+        </p>
+        <p>
+          <strong>Assessment:</strong> Grade 5 English - Weeks 1-3
+        </p>
       </div>
 
       <div className="results-header">
         <h2>Assessment Complete!</h2>
-        <div className="score-circle print-score-section" style={{ borderColor: scoreInfo.color }}>
+        <div
+          className="score-circle print-score-section"
+          style={{ borderColor: scoreInfo.color }}
+        >
           <span className="score-percentage">{score.percentage}%</span>
-          <span className="score-fraction">{score.correct}/{score.total} correct</span>
+          <span className="score-fraction">
+            {score.correct}/{score.total} correct
+          </span>
         </div>
         <p className="score-level" style={{ color: scoreInfo.color }}>
           {scoreInfo.level}
@@ -48,35 +58,50 @@ const ResultsPage = ({ answers, score, onReset, studentName = "Student" }) => {
       </div>
 
       {/* Print Button - hidden when printing */}
-      <div className="print-section no-print" style={{ marginBottom: '30px', textAlign: 'center' }}>
+      <div
+        className="print-section no-print"
+        style={{ marginBottom: "30px", textAlign: "center" }}
+      >
         <button className="print-button" onClick={handleSimplePrint}>
           🖨️ Print Results
         </button>
-        <p style={{ fontSize: '0.9rem', color: '#666', marginTop: '10px' }}>
+        <p style={{ fontSize: "0.9rem", color: "#666", marginTop: "10px" }}>
           Generate a printable report of your assessment results
         </p>
       </div>
 
       <div className="detailed-results">
         <h3>Detailed Question Review</h3>
-        
+
         {/* Section Summary */}
         <div className="section-summary">
           {Object.entries({
-            'A': 'Greetings and Personal Information',
-            'B': 'Questions and WH-Questions',
-            'C': 'Daily Routines and Time', 
-            'D': 'Grammar Focus'
+            'A': "",
+            'B': "",
+            'C': "",
+            'D': "",
           }).map(([sectionKey, sectionName]) => {
-            const sectionQuestions = questionsData.filter(q => q.section === sectionKey);
-            const sectionCorrect = sectionQuestions.filter(q => answers[q.id] === q.correctAnswer).length;
-            const sectionPercentage = Math.round((sectionCorrect / sectionQuestions.length) * 100);
-            
+            const sectionQuestions = questionsData.filter(
+              (q) => q.section === sectionKey
+            );
+            const sectionCorrect = sectionQuestions.filter(
+              (q) => answers[q.id] === q.correctAnswer
+            ).length;
+            const sectionPercentage = Math.round(
+              (sectionCorrect / sectionQuestions.length) * 100
+            );
+
             return (
-              <div key={sectionKey} className="section-score print-question-review">
-                <strong>Part {sectionKey}: {sectionName}</strong>
-                <span style={{ float: 'right' }}>
-                  {sectionCorrect}/{sectionQuestions.length} ({sectionPercentage}%)
+              <div
+                key={sectionKey}
+                className="section-score print-question-review"
+              >
+                <strong>
+                  Part {sectionKey}: {sectionName}
+                </strong>
+                <span style={{ float: "right" }}>
+                  {sectionCorrect}/{sectionQuestions.length} (
+                  {sectionPercentage}%)
                 </span>
               </div>
             );
@@ -87,38 +112,64 @@ const ResultsPage = ({ answers, score, onReset, studentName = "Student" }) => {
         {questionsData.map((question, index) => {
           const userAnswer = answers[question.id];
           const isCorrect = userAnswer === question.correctAnswer;
-          const userAnswerText = question.options.find(opt => opt.id === userAnswer)?.text || 'Not answered';
-          const correctAnswerText = question.options.find(opt => opt.id === question.correctAnswer)?.text;
-          
+          const userAnswerText =
+            question.options.find((opt) => opt.id === userAnswer)?.text ||
+            "Not answered";
+          const correctAnswerText = question.options.find(
+            (opt) => opt.id === question.correctAnswer
+          )?.text;
+
           return (
-            <div key={question.id} className="result-item print-question-review">
+            <div
+              key={question.id}
+              className="result-item print-question-review"
+            >
               <div className="result-header print-question-header">
-                <span className="question-num">Question {index + 1} (Part {question.section})</span>
-                <span className={`result-status ${isCorrect ? 'correct' : 'incorrect'}`}>
-                  {isCorrect ? '✓ Correct' : '✗ Incorrect'}
+                <span className="question-num">
+                  Question {index + 1} (Part {question.section})
+                </span>
+                <span
+                  className={`result-status ${
+                    isCorrect ? "correct" : "incorrect"
+                  }`}
+                >
+                  {isCorrect ? "✓ Correct" : "✗ Incorrect"}
                 </span>
               </div>
-              
-              <p className="result-question"><strong>{question.question}</strong></p>
-              
+
+              <p className="result-question">
+                <strong>{question.question}</strong>
+              </p>
+
               <div className="result-answers">
-                <p className={`user-answer ${isCorrect ? 'correct-answer' : 'incorrect-answer'}`}>
-                  <strong>Your answer:</strong> {userAnswer ? `${userAnswer}) ${userAnswerText}` : 'Not answered'}
+                <p
+                  className={`user-answer ${
+                    isCorrect ? "correct-answer" : "incorrect-answer"
+                  }`}
+                >
+                  <strong>Your answer:</strong>{" "}
+                  {userAnswer
+                    ? `${userAnswer}) ${userAnswerText}`
+                    : "Not answered"}
                 </p>
-                
+
                 {!isCorrect && (
                   <p className="correct-answer">
-                    <strong>Correct answer:</strong> {question.correctAnswer}) {correctAnswerText}
+                    <strong>Correct answer:</strong> {question.correctAnswer}){" "}
+                    {correctAnswerText}
                   </p>
                 )}
-                
+
                 {question.explanation && (
-                  <p className="explanation" style={{ 
-                    fontSize: '0.9rem', 
-                    color: '#666', 
-                    marginTop: '10px',
-                    fontStyle: 'italic' 
-                  }}>
+                  <p
+                    className="explanation"
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#666",
+                      marginTop: "10px",
+                      fontStyle: "italic",
+                    }}
+                  >
                     <strong>Explanation:</strong> {question.explanation}
                   </p>
                 )}
@@ -129,40 +180,56 @@ const ResultsPage = ({ answers, score, onReset, studentName = "Student" }) => {
       </div>
 
       {/* Action Buttons - hidden when printing */}
-      <div className="action-buttons no-print" style={{ 
-        display: 'flex', 
-        gap: '15px', 
-        justifyContent: 'center',
-        marginTop: '30px' 
-      }}>
+      <div
+        className="action-buttons no-print"
+        style={{
+          display: "flex",
+          gap: "15px",
+          justifyContent: "center",
+          marginTop: "30px",
+        }}
+      >
         <button className="reset-button" onClick={onReset}>
           🔄 Take Assessment Again
         </button>
-        <button className="save-button" onClick={() => {
-          const element = printableRef.current;
-          const opt = {
-            margin:       0.2,
-            filename:     `${studentName.replace(/\s+/g, '_')}_Assessment_Results.pdf`,
-            image:        { type: 'jpeg', quality: 0.99 },
-            html2canvas:  { scale: 1 },
-            jsPDF:        { unit: 'cm', format: 'a4', orientation: 'portrait' }
-          };
-          html2pdf().set(opt).from(element).save();
-        }}>
+        <button
+          className="save-button"
+          onClick={async () => {
+            const html2pdf = (await import("html2pdf.js")).default;
+            const element = printableRef.current;
+            const opt = {
+              margin: 0.2,
+              filename: `${studentName.replace(
+                /\s+/g,
+                "_"
+              )}_Assessment_Results.pdf`,
+              image: { type: "jpeg", quality: 0.99 },
+              html2canvas: { scale: 1 },
+              jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
+            };
+            html2pdf().set(opt).from(element).save();
+          }}
+        >
           💾 Save as PDF
         </button>
       </div>
 
       {/* Footer for print - only visible when printing */}
-      <div className="print-footer" style={{ 
-        display: 'none',
-        marginTop: '50px',
-        padding: '20px 0',
-        borderTop: '1px solid #ccc',
-        fontSize: '0.8rem',
-        color: '#666'
-      }}>
-        <p>Generated on {currentDate} | English Assessment Grade 5 | Weeks 1-3 Review</p>
+      <div
+        className="print-footer"
+        style={{
+          display: "none",
+          marginTop: "50px",
+          padding: "20px 0",
+          borderTop: "1px solid #ccc",
+          fontSize: "0.8rem",
+          color: "#666",
+        }}
+      >
+        <p>
+          Generated on {currentDate} | English Assessment Grade 5 | Weeks 1-3
+          Review
+        </p>
       </div>
     </div>
   );

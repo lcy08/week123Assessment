@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from 'react';
-import { questionsData } from '../data/questions';
+import { useState, useCallback, useEffect } from "react";
+import { questionsData } from "../data/questionsweek1-3";
 
 export const useQuestionnaireState = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -8,31 +8,34 @@ export const useQuestionnaireState = () => {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-  const saved = localStorage.getItem('assessment-progress');
-  if (saved) {
-    const data = JSON.parse(saved);
-    setAnswers(data.answers);
-    setCurrentQuestion(data.currentQuestion);
-  }
-}, []);
+    const saved = localStorage.getItem("assessment-progress");
+    if (saved) {
+      const data = JSON.parse(saved);
+      setAnswers(data.answers);
+      setCurrentQuestion(data.currentQuestion);
+    }
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem('assessment-progress', JSON.stringify({
-      answers,
-      currentQuestion
-    }));
+    localStorage.setItem(
+      "assessment-progress",
+      JSON.stringify({
+        answers,
+        currentQuestion,
+      })
+    );
   }, [answers, currentQuestion]);
 
   const selectAnswer = useCallback((questionId, answerId) => {
-    setAnswers(prev => ({
+    setAnswers((prev) => ({
       ...prev,
-      [questionId]: answerId
+      [questionId]: answerId,
     }));
   }, []);
 
   const nextQuestion = useCallback(() => {
     if (currentQuestion < questionsData.length - 1) {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     } else {
       setIsCompleted(true);
     }
@@ -40,7 +43,7 @@ export const useQuestionnaireState = () => {
 
   const previousQuestion = useCallback(() => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+      setCurrentQuestion((prev) => prev - 1);
     }
   }, [currentQuestion]);
 
@@ -50,7 +53,7 @@ export const useQuestionnaireState = () => {
 
   const calculateScore = useCallback(() => {
     let correct = 0;
-    questionsData.forEach(question => {
+    questionsData.forEach((question) => {
       if (answers[question.id] === question.correctAnswer) {
         correct++;
       }
@@ -58,7 +61,7 @@ export const useQuestionnaireState = () => {
     return {
       correct,
       total: questionsData.length,
-      percentage: Math.round((correct / questionsData.length) * 100)
+      percentage: Math.round((correct / questionsData.length) * 100),
     };
   }, [answers]);
 
@@ -81,6 +84,6 @@ export const useQuestionnaireState = () => {
     calculateScore,
     reset,
     totalQuestions: questionsData.length,
-    currentQuestionData: questionsData[currentQuestion]
+    currentQuestionData: questionsData[currentQuestion],
   };
 };

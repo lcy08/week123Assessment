@@ -37,24 +37,27 @@ function App() {
     <div className="app">
       <header className="app-header">
         <h1>English Assessment - Grade 5</h1>
-        <p>Weeks 1-3 Review</p>
+        <p>Weeks 6-7 Review</p>
       </header>
 
       <main className="app-main">
-        <ProgressBar 
-          current={currentQuestion} 
-          total={totalQuestions} 
-        />
+        <ProgressBar current={currentQuestion} total={totalQuestions} />
 
-        <QuestionCard
-          question={currentQuestionData}
-          selectedAnswer={answers[currentQuestionData.id]}
-          onAnswerSelect={selectAnswer}
-          questionNumber={currentQuestion + 1}
-        />
+        {currentQuestionData && currentQuestionData.options ? (
+          <QuestionCard
+            question={currentQuestionData}
+            selectedAnswer={answers[currentQuestionData.id]}
+            onAnswerSelect={selectAnswer}
+            questionNumber={currentQuestion + 1}
+          />
+        ) : (
+          <p style={{ textAlign: "center", color: "#666" }}>
+            Loading question...
+          </p>
+        )}
 
         <div className="navigation-buttons">
-          <button 
+          <button
             className="nav-button secondary"
             onClick={previousQuestion}
             disabled={currentQuestion === 0}
@@ -63,7 +66,7 @@ function App() {
           </button>
 
           {isCompleted ? (
-            <button 
+            <button
               className="nav-button primary"
               onClick={submitQuestionnaire}
               disabled={!answers[currentQuestionData.id]}
@@ -71,7 +74,7 @@ function App() {
               Submit Assessment
             </button>
           ) : (
-            <button 
+            <button
               className="nav-button primary"
               onClick={nextQuestion}
               disabled={!answers[currentQuestionData.id]}
